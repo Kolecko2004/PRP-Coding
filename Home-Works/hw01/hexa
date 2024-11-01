@@ -1,0 +1,19 @@
+
+int hexadecimal(int number) {
+    int result[4];
+    int rest = 0;
+    int share = number;
+    int i = 0;
+    while (share == 0) {
+        rest = share % 16;
+        share /= 16;
+        result[i] = rest ;
+        ++i;
+    }
+
+    for (i = 0; i < 4; i++) {
+        printf("HELLO3\n");
+        printf("poradi %d\n", i);
+        printf("%d\n", result[i]);
+    }
+}

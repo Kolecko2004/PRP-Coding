@@ -1,0 +1,24 @@
+    do {
+        int newNum;
+        result = fscanf(stdin, "%d", &numbers[arraySize]);
+        
+        if (result == 1) {
+            printf("%d nactene cislo\n", numbers[arraySize]);
+            printf("%d velikost\n", arraySize);
+            arraySize++;
+        }
+        printf("%d pocet vstupu\n", result);
+        printf("%d velikost pole\n", arraySize);
+    }
+    while (result != 0);
+
+    
+    for (int i = 0; i < result.length(); i++) {
+        int newNum;
+        result = fscanf(stdin, "%d", &numbers[arraySize]);
+        if (result == 1) {
+            printf("%d nactene cislo\n", numbers[arraySize]);
+            printf("%d velikost\n", arraySize);
+            arraySize++;
+        }
+    }
