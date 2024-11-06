@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-int prvocisla(int size, int prime_num[]) {
+int prime_number_generator(int size, int prime_num[]) {
     int prvocisla;
     for (prvocisla = 2; prvocisla <= size; prvocisla++) {
         prime_num[prvocisla] = 1;
@@ -51,39 +51,39 @@ int rozklad(int *loaded_num, int divide) {
 
 int load_numbers() {
     int load_result = 0;
-    int number = -1;
-    int divisor = 2;
-    int num_of_divisor;
+    int original_number = -1;
+    int divider = 2;
+    int num_of_divider;
 
 
-    while (number != 0) {
+    while (original_number != 0) {
         int s = 0; // pocet cisel kteryma se deli
-        load_result = fscanf(stdin, "%d", &number); // nacteme cislo na rozlozeni
-        input_test(load_result, number); // otestujeme cislo v tesu
+        load_result = fscanf(stdin, "%d", &original_number); // nacteme cislo na rozlozeni
+        input_test(load_result, original_number); // otestujeme cislo v tesu
     
-        int num_for_math = number; // zalozime promenou se kterou pocitame
-        int prime_array[number]; // zalozime promenou kde budou ulozeny prvocisla
-        prvocisla(number, prime_array); // najde prvocisla do limitu velikosti daneho cisla
+        int num_for_math = original_number; // zalozime promenou se kterou pocitame
+        int prime_array[original_number]; // zalozime promenou kde budou ulozeny prvocisla
+        prime_number_generator(original_number, prime_array); // najde prvocisla do limitu velikosti daneho cisla
 
         int index = 1; // vedet kolikatym prvocislem delime
 
-        printf("Prvociselny rozklad cisla %d je: \n", number);
+        printf("Prvociselny rozklad cisla %d je: \n", original_number);
 
         while (num_for_math != 1) {
-            divisor = get_divider(index, prime_array); // chceme ziskat prvocislo ktere pouzijeme na deleni
-            num_of_divisor = rozklad(&num_for_math, divisor); // rozkladame cislo a vrac9me kolikrat jsme delili
+            divider = get_divider(index, prime_array); // chceme ziskat prvocislo ktere pouzijeme na deleni
+            num_of_divider = rozklad(&num_for_math, divider); // rozkladame cislo a vrac9me kolikrat jsme delili
 
-            if (num_of_divisor > 0) {
+            if (num_of_divider > 0) {
                 s++;
                 s > 1 ? printf(" x ") : index;
-                printf("%d", divisor);
-                num_of_divisor > 1 ?  printf("^%d", num_of_divisor) : num_of_divisor;
+                printf("%d", divider);
+                num_of_divider > 1 ?  printf("^%d", num_of_divider) : num_of_divider;
             }
 
             index++;
         }
         printf("\n");
-        divisor = 2;
+        divider = 2;
     }
 }
 
