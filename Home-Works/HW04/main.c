@@ -1,29 +1,7 @@
 // Prvociselny Rozklad
 #include <stdlib.h>
 #include <stdio.h>
-
-void prime_num_generator(int size, int prime_num_arr[], int * arr_size, int * index) {
-    if (size > * arr_size) {
-        int all_num[size];
-        for (int prime_num = * arr_size; prime_num <= size; prime_num++) {
-            all_num[prime_num] = 1;
-        }
-    
-        for (int j = * arr_size; j <= size; j++) {
-            if (all_num[j] == 1) {
-                for (int i = * arr_size; i < size; i++) {
-                    if (i % j == 0 && i != j && all_num[i] == 1 ) {
-                        (* index)++;
-                        all_num[i] = 0;
-                        prime_num_arr[* index] = i;
-                    }
-                }
-            }
-        }
-        * arr_size < size ? * arr_size = size : size;
-    }
-    
-}
+#define SIZE 1000000
 
 int get_divider(int index, int prime_num_arr[]) {
     int prime = 0;
@@ -68,8 +46,37 @@ void printing_numbers(int * div_count, int * index, int * num_divisor, int * div
     }
 }
 
+void prime_num_generator(int prime_num_arr[], int *prime_count) {
+    int size = SIZE;
+    int all_num[size + 1];
+    *prime_count = 0;
+
+    for (int number = 2; number <= size; number++) {
+        all_num[number] = 1;
+    }
+
+    for (int devider = 2; devider * devider <= size; devider++) {
+        if (all_num[devider] == 1) {
+            for (int i = devider * devider; i <= size; i += devider) {
+                all_num[i] = 0;
+            }
+        }
+    }
+
+    for (int i = 2; i <= size; i++) {
+        if (all_num[i] == 1) {
+            prime_num_arr[*prime_count] = i;
+            (*prime_count)++;
+        }
+    }
+}
+
 int main() {
-    int scan_result = 0, arr_size = 0, original_num = -1, divider = 2, div_count, bigIndex = 0;
+    int prime_num_arr[SIZE];
+    int prime_count = 0;
+
+    prime_num_generator(prime_num_arr, &prime_count);
+    int scan_result = 0, original_num = -1, divider = 2, div_count, bigIndex = 0;
 
     while (1) {
         int num_divisor = 0;
@@ -82,10 +89,6 @@ int main() {
         input_test(scan_result, original_num);
     
         int num_for_math = original_num;
-        int prime_arr[original_num];
-        int index = 1;
-        
-        prime_num_generator(original_num, prime_arr, &arr_size, &bigIndex);
 
         if (original_num == 1) {
             fprintf(stdout, "Prvociselny rozklad cisla %d je:\n", original_num);
@@ -96,16 +99,17 @@ int main() {
             fprintf(stdout, "Prvociselny rozklad cisla %d je:\n", original_num);
 
             while (num_for_math != 1) {
-                divider = prime_arr[index];
+                divider = prime_num_arr[bigIndex];
                 div_count = rozklad(&num_for_math, divider);
 
-                printing_numbers(&div_count, &index, &num_divisor, &divider);
+                printing_numbers(&div_count, &bigIndex, &num_divisor, &divider);
 
-                index++;
+                bigIndex++;
             }
         }
         fprintf(stdout, "\n");
         divider = 2;
+        bigIndex = 0;
     }
     
     return 0;
