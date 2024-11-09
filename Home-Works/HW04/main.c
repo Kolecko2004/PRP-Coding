@@ -18,14 +18,16 @@ int get_divider(int index, int prime_num_arr[]) {
     return prime;
 }
 
-void input_test(int scan_res, int loaded_num) {
+void input_test(int scan_res, long loaded_num) {
+    fprintf(stderr, "scan_res = %d\n", scan_res);
+    fprintf(stderr, "loaded_num = %ld\n", loaded_num);
     if (scan_res == 0 || loaded_num < 0) {
         fprintf(stderr, "Error: Chybny vstup!\n");
         exit(100);
     }
 }
 
-int rozklad(int *loaded_num, int divide) {
+int rozklad(long *loaded_num, int divide) {
     int div_count = 0;
 
     while (*loaded_num % divide == 0) {
@@ -76,11 +78,12 @@ int main() {
     int prime_count = 0;
 
     prime_num_generator(prime_num_arr, &prime_count);
-    int scan_result = 0, original_num = -1, divider = 2, div_count, bigIndex = 0;
+    int scan_result = 0, divider = 2, div_count, bigIndex = 0;
+    long original_num = -1;
 
     while (1) {
         int num_divisor = 0;
-        scan_result = fscanf(stdin, "%d", &original_num);
+        scan_result = fscanf(stdin, "%ld", &original_num);
 
         if (original_num == 0) {
             break;
@@ -88,15 +91,15 @@ int main() {
 
         input_test(scan_result, original_num);
     
-        int num_for_math = original_num;
+    long num_for_math = original_num;
 
         if (original_num == 1) {
-            fprintf(stdout, "Prvociselny rozklad cisla %d je:\n", original_num);
+            fprintf(stdout, "Prvociselny rozklad cisla %ld je:\n", original_num);
             fprintf(stdout, "1");
         }
 
         else {
-            fprintf(stdout, "Prvociselny rozklad cisla %d je:\n", original_num);
+            fprintf(stdout, "Prvociselny rozklad cisla %ld je:\n", original_num);
 
             while (num_for_math != 1) {
                 divider = prime_num_arr[bigIndex];

@@ -1,0 +1,101 @@
+// Prvociselny Rozklad
+#include <stdlib.h>
+#include <stdio.h>
+#define SIZE 1000000
+
+void prime_num_generator(int prime_num_arr[], int *prime_count) {
+    int size = SIZE;
+    int all_num[size + 1];
+    *prime_count = 0;
+
+    for (int number = 2; number <= size; number++) {
+        all_num[number] = 1;
+    }
+
+    for (int devider = 2; devider * devider <= size; devider++) {
+        if (all_num[devider] == 1) {
+            for (int i = devider * devider; i <= size; i += devider) {
+                all_num[i] = 0;
+            }
+        }
+    }
+
+    for (int i = 2; i <= size; i++) {
+        if (all_num[i] == 1) {
+            prime_num_arr[*prime_count] = i;
+            (*prime_count)++;
+        }
+    }
+}
+
+int devide_string(char number[], int devider[], int num_size, int * index) {
+    char result[num_size];
+    int result_idx = 0;
+    int idx = 0;
+
+    int zbytek_po_deleni = 0;
+    
+    int temp = number[idx] - '0'; // temp = prvni cislo
+    
+    while(temp % devider[*index] != 0 && idx != num_size) { // do te doby dokud se deleni nerovna 0
+        if (temp > devider[*index]) {
+            result[result_idx] = temp / devider[*index] + '0';
+            result_idx;
+        }
+        
+        temp = temp * 10 + (number[++idx] - '0');
+    }
+
+    int final_idx = 0;
+    while (result[final_idx] != '\0') {
+        number[final_idx] = result[final_idx];
+        final_idx++;
+    }
+    number[final_idx] = '\0'; // Ensure null-termination
+}
+
+int is_divisible(char num[], int devider[], int * index) {
+    int remainder = 0;
+
+    for (int i = 0; num[i] != '\0'; i++) {
+        int digit = num[i] - '0';
+        remainder = (remainder * 10 + digit) % devider[*index];
+    }
+
+    return remainder;
+}
+
+int main() {
+    int size_of_arr = 0;
+    int prime_count = 0;
+    char str_num[101];
+
+    int prime_num_arr[SIZE];
+    int idx = 0;
+
+    prime_num_generator(prime_num_arr, &prime_count);
+
+    fgets(str_num, sizeof(str_num), stdin);
+    fprintf(stdout, "\n");
+    char str_num_math[101];
+
+    while (str_num[size_of_arr] != '\0') { // prepsat do array se kterou budeme pocitat
+        str_num_math[size_of_arr] = str_num[size_of_arr];
+        size_of_arr++;
+    }
+    str_num_math[size_of_arr] = '\0'; // priddat na konec array \0
+
+    puts(str_num); //vytisknouty arr str_num - originalni cislo
+
+    while (str_num_math[size_of_arr] != '0') {
+        if (is_divisible(str_num_math, prime_num_arr, &idx) == 0) {
+            devide_string(str_num_math, prime_num_arr, size_of_arr, &idx);
+        } else {
+            idx++;
+        }
+
+    }   
+    puts(str_num_math);
+
+    return 0;
+}

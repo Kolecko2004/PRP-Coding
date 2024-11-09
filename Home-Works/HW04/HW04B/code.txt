@@ -1,0 +1,36 @@
+    while (is_zero == 'F' && str_num_math[size_of_arr - 1] != '1') {
+        is_zero = 'Y';
+
+        if (is_divisible(str_num_math, prime_num_arr, &idx) == 0) {
+            devide_string(str_num_math, prime_num_arr, size_of_arr, &idx);
+        } else {
+            idx++;
+        }
+
+    // Check if the number has been fully reduced to zero
+        is_zero = 'Y';
+        for (int i = 0; i < size_of_arr; i++) {
+            if (str_num_math[i] != '0') {
+                is_zero = 'F';
+                break;
+            }
+        }
+    }   
+
+
+
+    //////////////////
+
+
+        while (temp != 0 && idx != num_size) {
+        temp = temp * 10 + (number[++idx] - '0');
+
+        if (temp / devider[*index] > 0) {
+            result[result_idx] = (temp / devider[*index]) + '0';
+
+            temp = temp % devider[*index];
+            
+            result_idx++;
+        }
+        
+    }
