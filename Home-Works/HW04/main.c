@@ -28,7 +28,7 @@ void input_test(int scan_result, long loaded_num) {
 int division(long *loaded_num, int divider) {
     int div_count = 0;
 
-    while (*loaded_num % divider == 0) {
+    while (*loaded_num % divider == 0   ) {
         div_count++;
         *loaded_num /= divider;
     }

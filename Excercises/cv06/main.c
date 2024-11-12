@@ -15,7 +15,7 @@
 
 #define INIT_MEMORY_SIZE 8
 
-char * read_line() {
+char * read_line(FILE * fp) {
     // Prepare an initial buffer
     size_t memory_capacity = INIT_MEMORY_SIZE; // kapacita pameti
     size_t memory_used = 0; // Kolik z te kapacity jsem uz pouzil
@@ -40,12 +40,54 @@ char * read_line() {
         memory [memory_used++] = c;
         printf("Loaded %c, cap %lu, Used %lu \n", c, memory_capacity, memory_used);
     }
+
+    memory[memory_used++] = '\0';
+
+    return memory;
 }
 
-char** loaded_line() {
+struct loaded_lines {
+    char ** data;
+    size_t capacity;
+    size_t size;
+}
+
+struct loaded_lines read_lines() {
+    struct loaded_lines;
+    loaded_lines.capacity - INIT_MEMORY_SIZE;
+    loaded_lines.size = 0;
+    loaded_lines.data = malloc(loaded_lines * sizeof(char *));
+    printf("read lines got a newmemory chunk");
+    if (loaded_lines.data == NULL) {
+        // exit(100);
+        return NULL;
+    }   
+    // load line by line
+    
+    for (char c; (c = getchar()) != '\n';) {
+        if (c == -1) {
+            return memory;
+        }
+        if (memory_used >= memory_capacity) {
+            memory_capacity *= 2;
+            char * memory_new = realloc(memory, memory_capacity);
+            if (memory_new == NULL) {
+                memory[memory_used - 1] = '\0';
+                return memory;
+            }
+        }
+    }
+
+
+
 
 }
 
 int main () {
-    char * the_line = read_line();
+    char * filename = "text.txt";
+    FILE * fp = fopen(filename, "r");
+
+    char * the_line = read_line(fp);
+    
+    
 }
