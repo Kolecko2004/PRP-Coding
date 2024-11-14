@@ -1,0 +1,32 @@
+-- Spojove seznamy
+
+- Spojovu seznam jednosmerny
+- list je mnozina prvku ktera je usporadana na zaklade sveho poradi
+    - insert
+    - remove
+    - indexOF
+    - size
+
+- spojovy seznam je rozhazeny v pameti a neni za sebou, ale jednotlive prvky na sebe ukazuji
+
+- push(&head) prida na zacatek listu novy prvek
+- size() a back() prochazeji cely seznam
+- pop() se pouziva na odebrani prvku (asi od zacatku) opak push()
+- popEnd() odebere posledni prvek ze seznamu
+- Na zacatku je nejdulezitejsi inicializace - na tu se nesmi zapomenout
+- vlkladani doprosted
+    - insertAt()
+    - vkladani hodnoty na nejaky index v seznamu
+    - pokud chceme vlozir reba na index 2 tak musime 1 napojit na nas novy alokovany prvek
+    - a nas prvek musi odkazovay na stary index 2
+- removeAt() a indexOf()- hleda index prvku s nejakou hodnotou aby se potom mohly odstranit vsechny prvky
+s danou hodnotou
+
+- Kruhovy spojovy seznam
+    - posledni prvek neukazuje na NULL, ale na prvni prvek (head)
+
+- obousmerny spojovy seznam
+    - ukazuje na nsledujici a na predchazejici prvvek v seznamu
+    - prvni prvek ma predchazejici prvek nastaveny na NULL
+    - posledni zase nasledujici na NULL
+    - 
