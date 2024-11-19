@@ -13,7 +13,8 @@ struct memory_values {
 } memory_values;
 
 struct memory_values str_1_struct;
-struct memory_values str_2_struct;  
+struct memory_values str_2_struct;
+struct memory_values arr_of_shift;
 
 void memory_alloc(struct memory_values *prt) {
     prt->pointer = malloc(INICIAL_LENGTH * sizeof(char));
@@ -43,8 +44,12 @@ void input() {
     int str_2_len = 0;
 
     while (first_line != 2) {
-        str_1_len == str_1_struct.capacity? memory_realloc(&str_1_struct) : str_1_len;
-        str_2_len == str_2_struct.capacity? memory_realloc(&str_2_struct) : str_2_len;
+        if (str_1_len == str_1_struct.capacity) {
+            memory_realloc(&str_1_struct);
+        }
+        if (str_2_len == str_2_struct.capacity) {
+            memory_realloc(&str_2_struct);
+        }
 
         inp_sign = getchar();
         
@@ -66,17 +71,9 @@ void input() {
 
     str_1_struct.size = str_1_len;
     str_2_struct.size = str_2_len;
-
-    for (int i = 0; str_1_struct.pointer[i] != '\n'; i++) {
-        printf("1: %c\n", str_1_struct.pointer[i]);
-    }
-
-    for (int i = 0; str_2_struct.pointer[i] != '\n'; i++) {
-        printf("2: %c\n", str_2_struct.pointer[i]);
-    }
 }
 
-int string_input_test() {
+void string_input_test() {
     int err1 = 0;
     int err2 = 0;
 
@@ -104,11 +101,42 @@ int string_input_test() {
     }
 }
 
-void print_output() {
+int most_frequent_shift() {
+    int max_count = 0, most_frequent = arr_of_shift.pointer[0];
 
+    for (int i = 0; i <= arr_of_shift.size; i++) {
+        int count = 0;
+
+        for (int j = 0; j <= arr_of_shift.size; j++) {
+            if (arr_of_shift.pointer[j] == arr_of_shift.pointer[i]) {
+                count++;
+            }
+        }
+        if (count > max_count) {
+            max_count = count;
+            most_frequent = arr_of_shift.pointer[i];
+        }
+    }
+    fprintf(stdout, "most frequent: %d\n", most_frequent);
+    return most_frequent;
 }
 
-void input_compare() {
+void shift_all_letters(int shift) {
+    for (int i = 0; i <= arr_of_shift.size - 1; i++) {
+        for (int j = 0; j < shift;) {
+            str_1_struct.pointer[i]++;
+
+            if (isalpha(str_1_struct.pointer[i])) {
+                j++;
+            }
+        }
+
+        fprintf(stdout, "%c", str_1_struct.pointer[i]);
+    }
+    fprintf(stdout, "\n");
+}
+
+void print_output() {
 
 }
 
@@ -116,18 +144,24 @@ void abc_shift() {
     int idx = 0;
 
     while (str_1_struct.pointer[idx] != '\n') {
-        char plus = str_1_struct.pointer[idx], minus = str_1_struct.pointer[idx];
+        char plus = str_1_struct.pointer[idx];
 
-        while (plus != str_2_struct.pointer[idx] && minus != str_2_struct.pointer[idx]) {
+        // osetrit ze shift se pocita pouze pokud je to abeceda
+        while (plus != str_2_struct.pointer[idx]) {
             plus++;
-            minus--;
-            //fprintf(stdout, "pluschar: %d, minuschar: %d, want: %d\n", str_1_struct.pointer[idx] + plus, str_1_struct.pointer[idx] - minus, str_2_struct.pointer[idx]);
-            fprintf(stdout, "char str1: %c, char str2: %c, index: %d, minus: %d, plus: %d\n", str_1_struct.pointer[idx], str_2_struct.pointer[idx], idx, minus, plus);
         }
-        fprintf(stdout, "GG\n");
-        str_1_struct.pointer[idx] = (plus == str_2_struct.pointer[idx] ? plus : minus);
 
-        minus = 0, plus = 0;
+        arr_of_shift.pointer[idx] = plus - str_1_struct.pointer[idx];
+
+        arr_of_shift.size++;
+
+        if (arr_of_shift.size >= arr_of_shift.capacity) {
+            memory_realloc(&arr_of_shift);
+        }
+
+        fprintf(stdout, "number: %d shift: %d, plus: %d\n", str_1_struct.pointer[idx], arr_of_shift.pointer[idx], plus);
+
+        plus = 0;
         idx++;
     }   
 }
@@ -135,12 +169,16 @@ void abc_shift() {
 int main () {
     memory_alloc(&str_1_struct);
     memory_alloc(&str_2_struct);
+    memory_alloc(&arr_of_shift);
     input();
     string_input_test();
     abc_shift();
+    int shift = most_frequent_shift();
+    shift_all_letters(shift);
 
 
     free(str_1_struct.pointer);
     free(str_2_struct.pointer);
+    free(arr_of_shift.pointer);
     return 0;
 }
