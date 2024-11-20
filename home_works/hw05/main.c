@@ -29,7 +29,7 @@ void memory_alloc(struct memory_values *prt) {
 }
 
 void memory_realloc(struct memory_values *prt) {
-    prt->pointer = realloc(prt->pointer, prt->capacity * 2 * sizeof(char));
+    prt->pointer = realloc(prt->pointer, prt->capacity * 4 * sizeof(char));
     if (prt->pointer == NULL) {
         fprintf(stderr, "Reallocation of memory was unsuccessful!\n");
         exit(1);
@@ -44,15 +44,14 @@ void input() {
     int str_2_len = 0;
 
     while (first_line != 2) {
-        if (str_1_len == str_1_struct.capacity) {
+        if (str_1_len + 1 >= str_1_struct.capacity) {
             memory_realloc(&str_1_struct);
         }
-        if (str_2_len == str_2_struct.capacity) {
+        if (str_2_len + 1 >= str_2_struct.capacity) {
             memory_realloc(&str_2_struct);
         }
 
         inp_sign = getchar();
-        
         if (first_line == 0) {
             str_1_struct.pointer[str_1_len] = inp_sign;
             str_1_len++;
@@ -102,29 +101,38 @@ void string_input_test() {
 }
 
 int most_frequent_shift() {
-    int max_count = 0, most_frequent = arr_of_shift.pointer[0];
+    // int max_count = 0, most_frequent = arr_of_shift.pointer[0];
 
-    for (int i = 0; i <= arr_of_shift.size - 1; i++) {
-        int count = 0;
+    // for (int i = 0; i <= arr_of_shift.size - 1; i++) {
+    //     int count = 0;
 
-        for (int j = 0; j <= arr_of_shift.size - 1; j++) {
-            if (arr_of_shift.pointer[j] == arr_of_shift.pointer[i]) {
-                count++;
-            }
-        }
-        if (count > max_count) {
-            max_count = count;
+    //     for (int j = 0; j <= arr_of_shift.size - 1; j++) {
+    //         if (arr_of_shift.pointer[j] == arr_of_shift.pointer[i]) {
+    //             count++;
+    //         }
+    //         fprintf(stdout, "shift: %d, count shift: %d\n", );
+    //     }
+    //     if (count > max_count) {
+    //         max_count = count;
+    //         most_frequent = arr_of_shift.pointer[i];
+    //     }
+    // } 
+
+    int max_count = 0, most_frequent = 0, all_shifts[256] = {0};
+
+    for (int i = 0; i < arr_of_shift.size; i++) {
+        all_shifts[(int)arr_of_shift.pointer[i]]++;
+        if (all_shifts[(int)arr_of_shift.pointer[i]] > max_count) {
+            max_count = all_shifts[(int)arr_of_shift.pointer[i]];
             most_frequent = arr_of_shift.pointer[i];
         }
+    }
 
-        fprintf(stdout, "shift: %d count of shift: %d\n", arr_of_shift.pointer[i], count);
-    } 
-
-    fprintf(stdout, "most frequent: %d\n", most_frequent);
     return most_frequent;
 }
 
 void shift_all_letters(int shift) {
+    fprintf(stdout, "#################################################################################\n");
     int j = shift;
     for (int i = 0; i <= arr_of_shift.size - 1; i++) {
         while (j != 0) {
@@ -149,17 +157,15 @@ void abc_shift() {
     int idx = 0;
 
     while (str_1_struct.pointer[idx] != '\n') {
-        char plus = str_1_struct.pointer[idx], realplus = str_1_struct.pointer[idx];
+        char plus = 0, minus = 0;
 
-        // osetrit ze shift se pocita pouze pokud je to abeceda
-        while (plus != str_2_struct.pointer[idx]) {
+        while (str_1_struct.pointer[idx] + plus != str_2_struct.pointer[idx]) {
             plus++;
-            if (isalpha(str_2_struct.pointer[idx])) {
-                realplus++;
+            if (isalpha(str_1_struct.pointer[idx] + plus) == 0) {
+                minus++;
             }
         }
-
-        arr_of_shift.pointer[idx] = realplus - str_1_struct.pointer[idx];
+        arr_of_shift.pointer[idx] = plus - minus;
 
         arr_of_shift.size++;
 
@@ -167,9 +173,7 @@ void abc_shift() {
             memory_realloc(&arr_of_shift);
         }
 
-        fprintf(stdout, "number: %d shift: %d, plus: %d, realplus: %d\n", str_1_struct.pointer[idx], arr_of_shift.pointer[idx], plus, realplus);
-
-        plus = 0, realplus = 0;
+        plus = 0, minus = 0;
         idx++;
     }   
 }
