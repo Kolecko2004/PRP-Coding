@@ -1,0 +1,13 @@
+- abstraktni datový typ
+    - 
+- Dynamické linkování
+    - push
+    - pop
+    - isEmpty
+    - peek - prvek který bych vyjmul kdybych zavolal pop
+    - search
+    - free
+    - 
+
+
+- fsanity pro testovani
