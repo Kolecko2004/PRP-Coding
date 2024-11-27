@@ -122,16 +122,36 @@ void scaning_matrix(struct matrix_info * matrix) {
 
     memory_alloc(&*matrix);
 
-    for (int idx_size = 0; idx_size < matrix->height * matrix->width; idx_size++) {
-        scan_result = fscanf(stdin, "%d", &matrix->arr[idx_size]);
+
+    int idx_y = 0, idx_x = 0;
+    for (int idx = 0; idx < matrix->height * matrix->width; idx_x++) {
+        scan_result = fscanf(stdin, "%d", &matrix->arr[idx_x][idx_y]);
+        if (idx > (matrix->width - 1)) {
+            idx_y++;
+            idx_x = 0;
+        }
+
+        else {
+            idx_x++;
+        }
         input_test(scan_result);
         //fprintf(stdout, "%d\n", matrix->arr[idx_size]);
     }
 
 ////////////////////////////////////////////////////////////////////
     fprintf(stdout, "Printing arr\n");
+    int x = 0, y = 0;
     for (int i = 0; i < matrix->width * matrix->height; i++) {
-        fprintf(stdout, "%d ", matrix->arr[i]);
+        fprintf(stdout, "%d ", matrix->arr[x][y]);
+        if (i > matrix->width) {
+            y++;
+            x = 0;
+            fprintf(stdout, "\n");
+        }
+
+        else {
+            x++;
+        }
     }
 
     fprintf(stdout, "\n");
@@ -141,11 +161,11 @@ void scaning_matrix(struct matrix_info * matrix) {
 void input() {
     scaning_matrix(&matrix1);
 
-    scaning_matrix(&matrix2);
+//    scaning_matrix(&matrix2);
 
     //matrix_size_test();
 
-    memory_alloc(&result_matrix);
+//    memory_alloc(&result_matrix);
 }
 
 int main () {
@@ -153,7 +173,7 @@ int main () {
     
     //matrix_subtraction('-');
     // matrix_addition('+');
-     matrix_multiplication();
+    //matrix_multiplication();
     
     return 0;
 }
