@@ -17,6 +17,11 @@ short arr_of_active_matrixes[100];
 struct matrix_info result_matrix;
 struct matrix_info matrices[100];
 
+void free_all() {
+    free(result_matrix.arr);
+
+}
+
 void input_test(int scan_result) {
     if (scan_result == 0) {
         fprintf(stderr, "Error: Chybny vstup!\n");
@@ -35,7 +40,6 @@ int minus(int val_1, int val_2) {
 
 void memory_alloc(struct matrix_info *arr) {
     arr->arr = malloc((arr->height * arr->width) * sizeof(int));
-
     if (arr->arr == NULL) {
         fprintf(stderr, "Allocation of memory was unsuccessful!\n");
         free_all();
@@ -119,6 +123,8 @@ void solving_matrixes() {
 
             multiplication_size_test(&matrices[idx], &matrices[i + 1]);
             operation('*', &matrices[idx], &matrices[i + 1]);
+            free(matrices[idx].arr);
+            free(matrices[i + 1].arr);
             matrices[idx] = result_matrix;
             arr_of_active_matrixes[i + 1] = 0;
         }
@@ -131,7 +137,9 @@ void solving_matrixes() {
                 idx--;
             }
             plus_minus_size_test(&matrices[idx], &matrices[i + 1]);
-            operation('+', &matrices[idx], &matrices[i + 1]);
+            math_operations[i] == '+'? operation('+', &matrices[idx], &matrices[i + 1]) : operation('-', &matrices[idx], &matrices[i + 1]);
+            free(matrices[idx].arr);
+            free(matrices[i + 1].arr);
             matrices[idx] = result_matrix;
             arr_of_active_matrixes[i + 1] = 0;
         }
