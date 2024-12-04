@@ -86,6 +86,25 @@ int kmp_search(const char *line, const char *pattern) {
     int i = 0; // Index for line
     int j = 0; // Index for pattern
 
+    fprintf(stdout, "line_length: %d\n",  n);
+    fprintf(stdout, "patt_length: %d\n",  m);
+    fprintf(stdout, "idx_line: %d\n",  i);
+    fprintf(stdout, "idx_pattern: %d\n",  j);
+    fprintf(stdout, "pattern: \n");
+    for (int i = 0; pattern[i] != '\0'; i++) {
+        fprintf(stdout, "%c", pattern[i]);
+    }
+    fprintf(stdout, "\n");
+    fprintf(stdout, "lps: \n");
+   for (int i = 0; i < m; i++) {
+        fprintf(stdout, "%d", lps[i]);
+    }
+    fprintf(stdout, "\n");
+    fprintf(stdout, "line: \n");
+    for (int i = 0; line[i] != '\0'; i++) {
+        fprintf(stdout, "%c", line[i]);
+    }
+    fprintf(stdout, "\n");
     while (i < n) {
         if (line[i] == pattern[j]) {
             i++;
