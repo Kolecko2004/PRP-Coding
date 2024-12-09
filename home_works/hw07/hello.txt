@@ -1,4 +1,2 @@
-color
-colour
-colouur
-colouuur
+Hello, Hello
+Bye

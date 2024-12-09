@@ -100,19 +100,29 @@ void read_from_stdin() {
 }
 
 void input_test(int num_of_arguments, char ** arguments) {
-    if (num_of_arguments != 3 && num_of_arguments != 2) {
+    if (num_of_arguments != 3 && num_of_arguments != 2 && num_of_arguments != 4) {
         printf("Expected 3 arguments, instead program got more or less than that\n");
         exit(100);
     }
 
-    all_values.pattern = arguments[1];
+    if (num_of_arguments == 3 || num_of_arguments == 2) {
+        all_values.pattern = arguments[1];
+    }
+
+    else if (num_of_arguments == 4) {
+        all_values.pattern = arguments[2];
+        all_values.file_name = arguments[3];
+        open_file();
+    }
+    
 
     if (num_of_arguments == 3) {
         all_values.file_name = arguments[2];
         open_file();
     }
 
-    else {
+    else if (num_of_arguments == 2)
+    {
         read_from_stdin();
     }
 }
@@ -133,9 +143,6 @@ void longest_pattern_prefix_for_search() {
             special_sign.exist = 1;
         }
     }
-
-    fprintf(stdout, "index: %d\n", special_sign.index);
-    fprintf(stdout, "sign: %c\n", special_sign.type);
 
     while (idx < all_values.pattern_len) {
         if (all_values.pattern[idx] == all_values.pattern[length]) {
@@ -175,24 +182,8 @@ int get_line_length(char *line) {
 
 int kmp_search_in_line(char *line) {
     int line_length = get_line_length(line), idx_line = 0, idx_pattern = 0;
-    // for (int i = 0; all_values.pattern[i] != '\0'; i++) {
-    //     fprintf(stdout, "%c", all_values.pattern[i]);
-    // }
-    // fprintf(stdout, "\n");
 
-    // for (int i = 0; line[i] != '\0'; i++) {
-    //     fprintf(stdout, "%c", line[i]);
-    // }
-    // fprintf(stdout, "\n");
-
-    while (idx_line < line_length) {
-        // fprintf(stdout, "Value pattern: : %c\n", all_values.pattern[idx_pattern]);
-        // fprintf(stdout, "Value line: %c\n", all_values.pattern[idx_pattern]);
-        // fprintf(stdout, "Index line: %d\n", idx_line);
-        // fprintf(stdout, "Index pattern: %d\n", idx_pattern);
-
-
-
+    while (idx_line < line_length) { 
         if (line[idx_line] == all_values.pattern[idx_pattern]) {
             idx_line++;
             idx_pattern++;
@@ -202,32 +193,38 @@ int kmp_search_in_line(char *line) {
             if (special_sign.type == '*') {
                 char repeat_char = all_values.pattern[idx_pattern - 1];
                 while (idx_line < line_length && line[idx_line] == repeat_char) {
-                    idx_line++; // Skip over repeated characters in the line
+                    idx_line++;
                 }
                 idx_pattern++;
                 continue;
             }
 
             else if (special_sign.type == '?') {
-                // Handle '?' (zero or one occurrence of the previous character)
                 char optional_char = all_values.pattern[idx_pattern - 1];
 
-                // Skip one occurrence if the character matches
                 if (idx_line < line_length && line[idx_line] == optional_char) {
                     idx_line++;
                 }
 
-                idx_pattern++; // Move past the `?` in the pattern
+                idx_pattern++;
                 continue;
             }
 
             else if (special_sign.type == '+') {
                 char repeat_char = all_values.pattern[idx_pattern - 1];
-                fprintf(stdout, "repeat_char: %c\n", repeat_char);
-                fprintf(stdout, "all_values.pattern %c\n", all_values.pattern[idx_pattern]);
-                if (repeat_char == line[idx_line]) {
-                    
-                }                 
+                
+                if (line[idx_line - 1] != repeat_char) {
+                    while (idx_line < line_length && line[idx_line] != repeat_char) {
+                        idx_line++;
+                    }
+                }
+
+                while (idx_line < line_length && line[idx_line] == repeat_char) {
+                    idx_line++;
+                }
+
+                idx_pattern++;
+                continue;
             }
         }
 
@@ -288,10 +285,6 @@ void close_program(int num_of_arguments) {
 int main (int argc, char *argv[]) {
     all_values.pattern_len = 0;
     input_test(argc, argv);
-
-    // get_file_n_pattern_size();
-
-    // load_n_save_text();
     
     longest_pattern_prefix_for_search();
 
