@@ -12,27 +12,33 @@ typedef struct {
    int tail_idx;
    int capacity;
    int num_of_stored_elements;
-   int queue[];
+   int * queue;
 } queue_t;
  
 /* creates a new queue with a given size */
 queue_t* create_queue(int capacity) {
-    queue_t * queue = malloc(capacity * sizeof(int));
+    queue_t * queue = malloc(sizeof(queue_t));
+    queue->queue = malloc(capacity * sizeof(int));
 
     if(queue == NULL) {
         fprintf(stderr, "Allocation of memory was unsuccesful\n");
         exit(1);
     }
 
-    if (queue->queue != NULL) {
-        memset(queue->queue, -1, sizeof(int));
+    else {
+        memset(queue->queue, -1, capacity * sizeof(int));
     }
-
 
     queue->head_idx = 0;
     queue->tail_idx = 0;
     queue->capacity = capacity;
     queue->num_of_stored_elements = 0;
+    
+    fprintf(stdout, "Before program result\n");
+    for (int i = 0; i < queue->capacity; i++) {
+        fprintf(stdout, "num:%d at idx: %d\n", queue->queue[queue->head_idx + i], queue->head_idx + i);
+    }
+    fprintf(stdout, "----------------\n");
 
     // for (int i = 0; i < queue->capacity; i++) {
     //     queue->queue[i] = i;
@@ -50,7 +56,7 @@ void delete_queue(queue_t *queue);
  * returns: true on success; false otherwise
  */
 bool push_to_queue(queue_t *queue, void *data) {
-    fprintf(stdout, "Push\n");
+    fprintf(stdout, "Push: ");
     int * int_data = data;
     // fprintf(stdout, "stored: %d, idx: %d, capacity: %d\n",queue->num_of_stored_elements, queue->tail_idx, queue->capacity);
     if (queue->num_of_stored_elements < queue->capacity) {
@@ -75,19 +81,23 @@ bool push_to_queue(queue_t *queue, void *data) {
  * returns: the first element on success; NULL otherwise
  */
 void* pop_from_queue(queue_t *queue) {
-    fprintf(stdout, "Pop\n");
+    fprintf(stdout, "Pop: ");
     void * poped_value = &queue->queue[queue->head_idx];
+    // fprintf(stdout, "poped value%d\n", *(int*)poped_value);
     if (queue->head_idx >= queue->capacity - 1) {
         queue->head_idx = queue->head_idx % queue->capacity;
     }
+
     if (queue->queue[queue->head_idx] != -1) {
+        fprintf(stdout, "%d\n", *(int*)poped_value);
         // fprintf(stdout, "BEF Removed: %d at idx: %d\n",  queue->queue[queue->head_idx], queue->head_idx);
         queue->queue[queue->head_idx] = -1;
         // fprintf(stdout, "AFT Removed: %d at idx: %d\n",  queue->queue[queue->head_idx], queue->head_idx);
         queue->num_of_stored_elements -= 1;
         queue->head_idx += 1;
 
-        fprintf(stdout, "Data of HEAD: %d at idx: %d\n", queue->queue[queue->head_idx], queue->head_idx);
+        // fprintf(stdout, "Data of HEAD: %d at idx: %d\n", queue->queue[queue->head_idx], queue->head_idx);
+        
     }
 
     else {
@@ -95,7 +105,7 @@ void* pop_from_queue(queue_t *queue) {
     }
 
 
-
+    
     return poped_value;
 }
  
@@ -105,12 +115,23 @@ void* pop_from_queue(queue_t *queue) {
  * returns: the idx-th element on success; NULL otherwise
  */
 void* get_from_queue(queue_t *queue, int idx) {
-    fprintf(stdout, "Get value\n");
+    if (idx >= queue->capacity) {
+        idx = idx % queue->capacity;
+    }
+
+    else if (idx < 0) {
+        idx = idx
+    }
+    fprintf(stdout, "Get value: ");
     void * idx_th_element = &queue->queue[idx];
-    fprintf(stdout, "Got: %d\n", *(int *)idx_th_element);
-    if (idx_th_element == NULL) {
+    fprintf(stdout, "Got: %d on idx: %d\n", *(int *)idx_th_element, idx);
+    if (idx_th_element == NULL || *(int*)idx_th_element == -1) {
         fprintf(stdout, "NULL\n");
         return NULL;
+    }
+
+    else {
+        fprintf(stdout, "%d\n", *(int *)idx_th_element);
     }
 
     return idx_th_element;
@@ -167,7 +188,7 @@ void input_command(queue_t *queue) {
             break;
         }
 
-        fprintf(stdout, "%c = %d, idx %d\n", command, data, idx);
+        // fprintf(stdout, "%c = %d, idx %d\n", command, data, idx);
         
         performing_commands(queue, command, data);
 
@@ -180,14 +201,17 @@ void input_command(queue_t *queue) {
 int main () {
     queue_t * queue = create_queue(get_input());
 
-    fprintf(stdout, "Stored elemets: %d\n", queue->num_of_stored_elements);
+    // fprintf(stdout, "Stored elemets: %d\n", queue->num_of_stored_elements);
     input_command(queue);
 
-    for (int i = 0; i < queue->capacity; i++) {
-        fprintf(stdout, "%d\n", queue->queue[i]);
+
+    fprintf(stdout, "----------------\n");
+    fprintf(stdout, "After program result\n");
+    for (int i = 0; i < queue->num_of_stored_elements; i++) {
+        fprintf(stdout, "num:%d at idx: %d\n", queue->queue[queue->head_idx + i], queue->head_idx + i);
     }
     
-    free(queue->queue);
+    free(queue);
 
     return 0;
 }
