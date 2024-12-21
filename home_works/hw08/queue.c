@@ -1,20 +1,20 @@
 #ifndef __QUEUE_H__
 #define __QUEUE_H__
- 
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
- 
+
 /* Queue structure which holds all necessary data */
 typedef struct {
-   int head_idx;
-   int tail_idx;
-   int capacity;
-   int num_of_stored_elements;
-   int * queue;
+    int head_idx;
+    int tail_idx;
+    int capacity;
+    int num_of_stored_elements;
+    int * queue;
 } queue_t;
- 
+
 /* creates a new queue with a given size */
 queue_t* create_queue(int capacity) {
     queue_t * queue = malloc(sizeof(queue_t));
