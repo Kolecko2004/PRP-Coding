@@ -1,14 +1,20 @@
-Before program result
-num:-1 at idx: 0
-num:-1 at idx: 1
-num:-1 at idx: 2
-----------------
-Push: Get value: Got: 0 on idx: -1
-0
-Get value: Got: 1 on idx: 0
 1
-Get value: Got: -1 on idx: 1
+2
+3
+4
+5
+6
+7
+8
 NULL
-Pop: 1
-----------------
-After program result
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+NULL

@@ -1,5 +1,5 @@
 CFLAGS+=  -pedantic -Wall -std=c99 -O3
-HW=hw06-b0b36prp
+HW=main
 ZIP=zip
 
 all: $(HW) lib
