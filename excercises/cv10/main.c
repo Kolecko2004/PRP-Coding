@@ -1,48 +1,83 @@
+#include "queue.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-#include "book.h"
-
-BookList* get_example_list();
-void test_list_contents();
-int main() {
-    test_list_contents();
-    return 0;
-}
-
-void test_write_numbers() {
-    int a = 21;
-    // int b = 2;
-    // int c[] = {3, 4, 5};
-
-    FILE * fp = fopen("demo_numbers", "w");
-    if (fp == NULL) {
-        fprintf(stderr, "fopen Failed\n");
-        return;
+/* Reads queue size from user */
+int get_input() {
+    int capacity = 0;
+    int result = fscanf(stdin, "%d", &capacity);
+    if (result != 1) {
+        fprintf(stderr, "Error reading queue size\n");
+        exit(1);
     }
-
-    // fprintf(fp, "%d", a);
-    fwrite(&a, sizeof(a), 1, fp);
-
-    fclose(fp);
+    return capacity;
 }
 
-BookList* get_example_list() {
-    BookList* pl = create_book_list();
-    Book* p1 = create_book(2005, "Programming in C", "Programming in C will teach you how to write programs in the C programming language.");
-    Book* p2 = create_book(161, "Meditations", NULL);
-    Book* p3 = create_book(-1500, "Poor Man of Nipur", "");
-    add_book(pl, p1);
-    add_book(pl, p2);
-    add_book(pl, p3);
+/* Executes commands on the queue */
+void performing_commands(queue_t *queue, char command, int data) {
+    if (command == 'a') {
+        if (!push_to_queue(queue, &data)) {
+            fprintf(stdout, "Queue is full\n");
+        }
 
-    test_write_numbers();
-    return pl;
+        fprintf(stdout, "Before program result\n");
+        for (int i = 0; i < queue->capacity; i++) {
+            fprintf(stdout, "num:%d at idx: %d\n", queue->queue[queue->head_idx + i], queue->head_idx + i);
+        }
+        fprintf(stdout, "----------------\n");
+    } 
+    
+    else if (command == 'g') {
+        void *element = get_from_queue(queue, data);
+        if (element == NULL) {
+            fprintf(stdout, "NULL\n");
+        } 
+        
+        else {
+            fprintf(stdout, "%d\n", *(int *)element);
+        }
+    } 
+    
+    else if (command == 'r') {
+        void *popped = pop_from_queue(queue);
+        if (popped == NULL) {
+            fprintf(stdout, "NULL\n");
+        } 
+        
+        else {
+            fprintf(stdout, "%d\n", *(int *)popped);
+        }
+    }
+    
+    else {
+        fprintf(stdout, "Unknown command '%c'. Use 'a', 'g', or 'r'.\n", command);
+        exit(100);
+    }
 }
 
-void test_list_contents() {
-    BookList* pl = get_example_list();
-    print_book_list(pl);
-    destroy_book_list(pl);
+/* Processes user input commands */
+void input_command(queue_t *queue) {
+    int scan_result = 0;
+    char command;  // Declare the 'command' variable here
+    int data;      // Declare the 'data' variable here
+
+    while ((scan_result = fscanf(stdin, " %c %d", &command, &data)) != EOF) {
+        if (command == 'r' && scan_result != 1) {
+            fprintf(stdout, "Input command has wrong structure\n");
+            break;
+        }
+        if (command != 'r' && scan_result != 2) {
+            fprintf(stdout, "Input command has wrong structure\n");
+            break;
+        }
+        performing_commands(queue, command, data);
+    }
+}
+
+/* Main function */
+int main() {
+    queue_t *queue = create_queue(get_input());
+    input_command(queue);
+    delete_queue(queue);
+    return 0;
 }
