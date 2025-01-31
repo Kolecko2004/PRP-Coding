@@ -63,6 +63,7 @@ void open_file() {
     get_file_n_pattern_size();
 }
 
+<<<<<<< Updated upstream
 void memory_increase(struct all_values *prt) {
     prt->txt_arr = realloc(prt->txt_arr, prt->file_length * 2 * sizeof(char));
     if (prt->txt_arr == NULL) {
@@ -127,11 +128,14 @@ void input_test(int num_of_arguments, char ** arguments) {
     }
 }
 
+=======
+>>>>>>> Stashed changes
 void longest_pattern_prefix_for_search() {
     int length = 0, idx = 1;
     all_values.longest_pattern_prefix = malloc(all_values.pattern_len * sizeof(int));
     if (all_values.longest_pattern_prefix == NULL) {
         fprintf(stderr, "Allocation of memory was unsuccessful!\n");
+<<<<<<< Updated upstream
         exit(100);
     }
     all_values.longest_pattern_prefix[0] = 0;
@@ -143,6 +147,11 @@ void longest_pattern_prefix_for_search() {
             special_sign.exist = 1;
         }
     }
+=======
+        return 100;
+    }
+    all_values.longest_pattern_prefix[0] = 0;
+>>>>>>> Stashed changes
 
     while (idx < all_values.pattern_len) {
         if (all_values.pattern[idx] == all_values.pattern[length]) {
@@ -164,7 +173,11 @@ void longest_pattern_prefix_for_search() {
     }
 }
 
+<<<<<<< Updated upstream
 void print_line_w_pattern(char * line) {
+=======
+void print_pattern_line(char * line) {
+>>>>>>> Stashed changes
     for (int i = 0; line[i] != '\n'; i++) {
         fprintf(stdout, "%c", line[i]);
     }
@@ -183,7 +196,11 @@ int get_line_length(char *line) {
 int kmp_search_in_line(char *line) {
     int line_length = get_line_length(line), idx_line = 0, idx_pattern = 0;
 
+<<<<<<< Updated upstream
     while (idx_line < line_length) { 
+=======
+    while (idx_line < line_length) {
+>>>>>>> Stashed changes
         if (line[idx_line] == all_values.pattern[idx_pattern]) {
             idx_line++;
             idx_pattern++;
@@ -229,7 +246,11 @@ int kmp_search_in_line(char *line) {
         }
 
         if (idx_pattern == all_values.pattern_len) {
+<<<<<<< Updated upstream
             print_line_w_pattern(line);
+=======
+            print_pattern_line(line);
+>>>>>>> Stashed changes
             return 0;
         }
 
@@ -248,6 +269,25 @@ int kmp_search_in_line(char *line) {
     return 1;
 }
 
+<<<<<<< Updated upstream
+=======
+void get_file_n_pattern_size() {
+    fseek(all_values.file, 0, SEEK_END);
+    all_values.file_length = ftell(all_values.file);
+    text_arr_alloc();
+    rewind(all_values.file);
+    
+    while (all_values.pattern[all_values.pattern_len] != '\0') {
+        all_values.pattern_len++;
+    }
+}
+
+void load_n_save_text() {
+    fread(all_values.txt_arr, 1, all_values.file_length, all_values.file);
+    all_values.txt_arr[all_values.file_length] = '\0';
+}
+
+>>>>>>> Stashed changes
 int search_for_pattern() {
     int return_value = 1, last_line = -1;
 
@@ -274,10 +314,15 @@ int search_for_pattern() {
     return return_value;
 }
 
+<<<<<<< Updated upstream
 void close_program(int num_of_arguments) {
     if (num_of_arguments == 3) {
         fclose(all_values.file);
     }
+=======
+void close_program() {
+    fclose(all_values.file);
+>>>>>>> Stashed changes
     free(all_values.txt_arr);
     free(all_values.longest_pattern_prefix);
 }
@@ -285,12 +330,27 @@ void close_program(int num_of_arguments) {
 int main (int argc, char *argv[]) {
     all_values.pattern_len = 0;
     input_test(argc, argv);
+<<<<<<< Updated upstream
     
     longest_pattern_prefix_for_search();
 
     int return_value = search_for_pattern();
 
     close_program(argc);
+=======
+
+    open_file();
+
+    get_file_n_pattern_size();
+
+    load_n_save_text();
+    
+    longest_pattern_prefix_for_search();
+
+    int return_value = search_for_pattern();
+
+    close_program();
+>>>>>>> Stashed changes
 
     return return_value;
 }
