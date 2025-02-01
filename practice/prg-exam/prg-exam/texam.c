@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
    char *img_source = argc > 1 ? argv[1] : NULL; // Test jestli existuije prvni argument - zdrojovy img
    char *txt_source = argc > 2 ? argv[2] : NULL; // Test jestli existuije druhy argument - zdrojovy text
    char *output_file = argc > 3 ? argv[3] : NULL; // Test jestli existuije treti argument - output img
-   bool anim = argc > 4 && !strcmp(argv[4], "--anim") == 0; // Test jestli byl pouzit agument "--anim". strcmp testuje zda to je presne ten argument ktery chceme
+   bool anim = argc > 4 && strcmp(argv[4], "--anim") == 0; // Test jestli byl pouzit agument "--anim". strcmp testuje zda to je presne ten argument ktery chceme
 
    my_assert(img_source != NULL && txt_source != NULL && output_file != NULL, __func__, __LINE__, __FILE__);
 
@@ -96,9 +96,9 @@ bool process_file(FILE *file, unsigned char *img, int image_w, int image_h, bool
       }
 
       counter  += 1;
-      if (anim && (counter % 15) == 0) {
+      if (anim && (counter % 1) == 0) {
          xwin_redraw(image_w, image_h, img);
-         delay(10);
+         delay(1000);
       }
    }
    return ret;
