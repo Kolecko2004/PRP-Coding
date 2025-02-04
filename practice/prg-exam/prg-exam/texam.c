@@ -16,18 +16,19 @@
 bool process_file(FILE *file, unsigned char *img, int image_w, int image_h, bool anim);
 bool copy(unsigned char *img, int image_w, int image_h, int x1, int y1, int w, int h, int x2, int y2);
 bool swap(unsigned char *img, int image_w, int image_h, int x1, int y1, int w, int h, int x2, int y2);
+int read_new(char *filename);
 
 int main(int argc, char *argv[]) 
 {
    char *img_source = argc > 1 ? argv[1] : NULL; // Test jestli existuije prvni argument - zdrojovy img
-   char *txt_source = argc > 2 ? argv[2] : NULL; // Test jestli existuije druhy argument - zdrojovy text
+   char *command_source = argc > 2 ? argv[2] : NULL; // Test jestli existuije druhy argument - zdrojovy text
    char *output_file = argc > 3 ? argv[3] : NULL; // Test jestli existuije treti argument - output img
    bool anim = argc > 4 && strcmp(argv[4], "--anim") == 0; // Test jestli byl pouzit agument "--anim". strcmp testuje zda to je presne ten argument ktery chceme
 
-   my_assert(img_source != NULL && txt_source != NULL && output_file != NULL, __func__, __LINE__, __FILE__);
+   my_assert(img_source != NULL && command_source != NULL && output_file != NULL, __func__, __LINE__, __FILE__);
 
    // printf("Checking img_source pointer: %s\n", img_source);
-   // printf("Checking txt_source pointer: %s\n", txt_source);
+   // printf("Checking command_source pointer: %s\n", command_source);
    // printf("Checking output_file pointer: %s\n", output_file);
    // printf("Checking --anim pointer: %d\n", anim);
    // read image
@@ -43,9 +44,9 @@ int main(int argc, char *argv[])
       xwin_init(image_w, image_h); // pokud je animace wotevrani okna
    }
 
-   FILE *file = fopen(txt_source, "r"); // otevreni souboru se zadanim pohybu
+   FILE *file = fopen(command_source, "r"); // otevreni souboru se zadanim pohybu
    if (file == NULL) { // err pokud nastala chyba pri nacitani souboru
-      fprintf(stderr, "ERROR: There was an error when loading %s file.\n", txt_source);
+      fprintf(stderr, "ERROR: There was an error when loading %s file.\n", command_source);
       free(img);
       if (anim) {
          xwin_close();
@@ -106,7 +107,7 @@ bool process_file(FILE *file, unsigned char *img, int image_w, int image_h, bool
       counter  += 1; // animace obrazu v anim okne
       if (anim && (counter % 1) == 0) {
          xwin_redraw(image_w, image_h, img);
-         delay(1000);
+         delay(1000); xsdce  
       }
    }
 
@@ -158,12 +159,34 @@ bool swap(unsigned char *img, int image_w, int image_h, int x1, int y1, int w, i
             }
          } 
          else {
-            fprintf(stderr, "copy of image was unsuccessful - out of range\n");
+            fprintf(stderr, "swap of image was unsuccessful - out of range\n");
             return false;
          }
       }
    }
    return ret;
+}
+
+int read_new(char *filename) {
+    int return_value = 0;
+    int img_width, img_height;
+    unsigned char *img = xwin_load_image(filename, &img_width, &img_height);
+    my_assert(img != NULL, __func__, __LINE__, __FILE__);
+
+      for (int idx = 0; idx < img_width; idx++) {
+        for (int idy= 0; idy < img_height; idy++) {
+            int cursor = (idx * img_height + idy) * 3;
+
+            int red = img[cursor];
+            int green = img[cursor + 1];
+            int blue = img[cursor + 2];
+
+            fprintf(stdout, "   RED: %3d, GREEN: %3d, BLUE: %3d   |||", red, green, blue);
+        }
+        fprintf(stdout, "\n");
+    }
+
+    return return_value;
 }
 
 /* end of texam.c */

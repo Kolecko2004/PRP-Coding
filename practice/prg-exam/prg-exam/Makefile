@@ -3,8 +3,8 @@ CFLAGS+= -std=c99 -pedantic -Wall -O2 -I/usr/include/SDL2 -D_REENTRANT
 LDFLAGS+= -lSDL2 -lSDL2_image -ljpeg  # Add missing libraries
 
 # Target executable
-TARGET=texam_load
-OBJS=exam_utils.o save_jpeg.o texam_load.o xwin_sdl.o
+TARGET=load
+OBJS=exam_utils.o save_jpeg.o load.o xwin_sdl.o
 
 # Build executable
 bin: $(TARGET)

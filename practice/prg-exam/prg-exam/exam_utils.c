@@ -51,12 +51,12 @@ void save_ppm_image_green(int w, int h, const char *fname)
 
 void save_image_ppm(int w, int h, unsigned char *img, const char *fname) {
    FILE *fd = fopen(fname, "wb");
-   my_assert(fd != NULL, __func__, __LINE__, __FILE__);
+   my_assert(fd != NULL, __func__, __LINE__, __FILE__); 
    fprintf(fd, "P6\n %s\n %d\n %d\n %d\n", IMAGE_COMMENT, w, h, MAX_COLOR_VALUE);
    
    for(int y = 0; y < h; ++y) {
       for(int x = 0; x < w; ++x) {
-         unsigned char color[3] = {img[y * (w * 3) + (x * 3)], img[y * (w * 3) + (x * 3) + 1], img[y * (w * 3) + (x * 3)] + 2}; /* R G B */
+         unsigned char color[3] = {img[y * (w * 3) + (x * 3)], img[y * (w * 3) + (x * 3) + 1], img[y * (w * 3) + (x * 3) + 2]}; /* R G B */
          my_assert(fwrite(color, 1, 3, fd) == 3, __func__, __LINE__, __FILE__);
       }
    }
