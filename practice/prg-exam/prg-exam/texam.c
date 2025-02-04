@@ -13,9 +13,6 @@
 #include "xwin_sdl.h"
 #include "save_jpeg.h"
 
-#define DEFAULT_WIDTH 640
-#define DEFAULT_HEIGHT 480
-
 bool process_file(FILE *file, unsigned char *img, int image_w, int image_h, bool anim);
 bool copy(unsigned char *img, int image_w, int image_h, int x1, int y1, int w, int h, int x2, int y2);
 bool swap(unsigned char *img, int image_w, int image_h, int x1, int y1, int w, int h, int x2, int y2);
@@ -34,16 +31,20 @@ int main(int argc, char *argv[])
    // printf("Checking output_file pointer: %s\n", output_file);
    // printf("Checking --anim pointer: %d\n", anim);
    // read image
-   int image_w, image_h;
-   unsigned char *img = xwin_load_image(img_source, &image_w, &image_h);
-   my_assert(img != NULL, __func__, __LINE__, __FILE__);
+
+   int image_w, image_h; // deklarace promenych pro sirku a vysku obrazku
+   unsigned char *img = xwin_load_image(img_source, &image_w, &image_h); // nacteni sirky a vysky, 
+   my_assert(img != NULL, __func__, __LINE__, __FILE__); // otestovani img pointeru
+
+   // printf("Checking width pointer: %d\n", image_w);
+   // printf("Checking height pointer: %d\n", image_h);
 
    if (anim) {
-      xwin_init(image_w, image_h);
+      xwin_init(image_w, image_h); // pokud je animace wotevrani okna
    }
 
-   FILE *file = fopen(txt_source, "r");
-   if (file == NULL) {
+   FILE *file = fopen(txt_source, "r"); // otevreni souboru se zadanim pohybu
+   if (file == NULL) { // err pokud nastala chyba pri nacitani souboru
       fprintf(stderr, "ERROR: There was an error when loading %s file.\n", txt_source);
       free(img);
       if (anim) {
@@ -52,7 +53,14 @@ int main(int argc, char *argv[])
       }
    }
 
-   my_assert(process_file(file, img, image_w, image_h, anim), __func__, __LINE__, __FILE__);
+   if (!process_file(file, img, image_w, image_h, anim)) {
+      fprintf(stdout, "ERROR: processing file err");
+      free(img);
+      if (anim) {
+         xwin_close();
+      }
+      exit(-1);
+   }
 
    // save_ppm_image_red(DEFAULT_WIDTH, DEFAULT_HEIGHT, "red.ppm");
    // save_ppm_image_green(DEFAULT_WIDTH, DEFAULT_HEIGHT, "green.ppm");
@@ -73,34 +81,35 @@ int main(int argc, char *argv[])
    return EXIT_SUCCESS;
 }
 
-bool process_file(FILE *file, unsigned char *img, int image_w, int image_h, bool anim) {
-   bool ret = true;
+bool process_file(FILE *file, unsigned char *img, int image_w, int image_h, bool anim) { // funkce na nacteni informaci z txt souboru
+   bool ret = true; // zalozeni vsech promennych
    int x1, y1, x2, y2;
    int w, h;
    char cmd[3];
    int counter = 0;
 
-   while(ret && !feof(file)) {
-      int r = fscanf(file, "%2s %d %d %d %d %d %d\n", cmd, &x1, &y1, &w, &h, &x2, &y2);
+   while(ret && !feof(file)) { // cyklus do te doby dokud nemame konec file
+      int scan_result = fscanf(file, "%2s %d %d %d %d %d %d\n", cmd, &x1, &y1, &w, &h, &x2, &y2); // fscanf pro cteni vsech dat
       // printf("Read: command='%s', x1=%d, y1=%d, w=%d, h=%d, x2=%d, y2=%d (r=%d)\n", 
       // cmd, x1, y1, w, h, x2, y2, r);
-      if (r == 7 && strcmp(cmd, "cp") == 0) {
+      if (scan_result == 7 && strcmp(cmd, "cp") == 0) { // pokud pocet nactenych dat je 7 a zaroven je cmd hodnota "cp" volame copy
          ret = copy(img, image_w, image_h, x1, y1, w, h, x2, y2);
       }
-      else if (r == 7 && strcmp(cmd, "sw") == 0) {
-         ret = swap(img, image_w, image_h, x1, y1, w, h, x2, y2);
+      else if (scan_result == 7 && strcmp(cmd, "sw") == 0) { // pokud pocet nactenych dat je 7 a zaroven je cmd hodnota "sw" volame swap
+         ret = swap(img, image_w, image_h, x1, y1, w, h, x2, y2); 
       }
-      else {
+      else { // pokud ani jedna predchozi podminka neprosla koncime 
          ret = false;
          break;
       }
 
-      counter  += 1;
+      counter  += 1; // animace obrazu v anim okne
       if (anim && (counter % 1) == 0) {
          xwin_redraw(image_w, image_h, img);
          delay(1000);
       }
    }
+
    return ret;
 }
 

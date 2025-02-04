@@ -63,4 +63,15 @@ void save_image_ppm(int w, int h, unsigned char *img, const char *fname) {
    fclose(fd);
 }
 
+void save_image_ppm_now(int w, int h, unsigned char *img, const char *fname) {
+   FILE *fd = fopen(fname, "wb");
+   my_assert(fd != NULL, __func__, __LINE__, __FILE__);
+
+   // Write the PPM header
+   fprintf(fd, "P6\n%s\n%d %d\n%d\n", IMAGE_COMMENT, w, h, MAX_COLOR_VALUE);
+   my_assert((fwrite(img, 1, w * h * 3, fd) == w * h * 3), __func__, __LINE__, __FILE__);
+
+   fclose(fd);
+}
+
 /* end of exam_utils.c */

@@ -15,6 +15,8 @@ void save_ppm_image_green(int w, int h, const char *fname);
 
 void save_image_ppm(int w, int h, unsigned char *img, const char *fname);
 
+void save_image_ppm_now(int w, int h, unsigned char *img, const char *fname);
+
 #endif
 
 /* end of exam_utils.h */

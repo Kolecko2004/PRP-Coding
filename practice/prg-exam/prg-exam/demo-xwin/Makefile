@@ -4,7 +4,7 @@ CFLAGS+=-O2
 
 OBJS=$(patsubst %.c,%.o,$(wildcard *.c))
 
-CFLAGS+=-std=c99 -pedantic -Wall
+CFLAGS+=-std=c99 -pedantic -Wall -Werror -pedantic -g
 
 CFLAGS+=$(shell sdl2-config --cflags)
 LDFLAGS+=$(shell sdl2-config --libs)
